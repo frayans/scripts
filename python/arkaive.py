@@ -7,7 +7,6 @@
 # output = "" <- where the archive will be placed
 
 import logging
-
 from dataclasses import dataclass
 from datetime import datetime
 from enum import StrEnum
@@ -38,14 +37,12 @@ class Archive:
 
 
 def create_archive(archive: Archive, format: Format) -> None:
-    LOGGER.info(f"Creating archive `{archive.name}` at {archive.output} from {archive.input}")
+    LOGGER.info(
+        f"Creating archive `{archive.name}` at {archive.output} from {archive.input}"
+    )
     try:
         make_archive(
-            archive.output / archive.name,
-            format,
-            archive.input,
-            "",
-            logger=LOGGER
+            archive.output / archive.name, format, archive.input, "", logger=LOGGER
         )
     except Exception as e:
         LOGGER.error(e)
@@ -65,7 +62,9 @@ def read_config(path: Path) -> Iterator[Archive]:
 
 
 def main() -> None:
-    logging.basicConfig(filename=f"{user_log_dir(APP_NAME)}/{APP_NAME}-{datetime.now()}.log")
+    logging.basicConfig(
+        filename=f"{user_log_dir(APP_NAME)}/{APP_NAME}-{datetime.now()}.log"
+    )
     LOGGER.info("Getting configs...")
     config_path = Path(user_config_dir(APP_NAME)) / CONFIG_FILE
     for archive in read_config(config_path):
