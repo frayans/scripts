@@ -6,6 +6,10 @@
 # input = "" <- the path to a directory
 # output = "" <- where the archive will be placed
 
+# TODO: 1. CLI
+#       2. FIX LOGGING BUG
+#       3. some restructuring
+
 import logging
 from dataclasses import dataclass
 from datetime import datetime
@@ -38,7 +42,7 @@ class Archive:
 
 def create_archive(archive: Archive, format: Format) -> None:
     LOGGER.info(
-        f"Creating archive `{archive.name}` at {archive.output} from {archive.input}"
+        f"creating archive `{archive.name}` at {archive.output} from {archive.input}"
     )
     try:
         make_archive(
@@ -63,13 +67,14 @@ def read_config(path: Path) -> Iterator[Archive]:
 
 def main() -> None:
     logging.basicConfig(
-        filename=f"{user_log_dir(APP_NAME)}/{APP_NAME}-{datetime.now()}.log"
+        filename=f"{user_log_dir(APP_NAME)}/{APP_NAME}-{datetime.now()}.log",
+        level=logging.DEBUG
     )
-    LOGGER.info("Getting configs...")
+    LOGGER.info("getting configs...")
     config_path = Path(user_config_dir(APP_NAME)) / CONFIG_FILE
     for archive in read_config(config_path):
         create_archive(archive, Format.GZIP)
-    LOGGER.info("Finished.")
+    LOGGER.info("finished")
 
 
 if __name__ == "__main__":
